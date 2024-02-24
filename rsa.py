@@ -1,7 +1,7 @@
 # This program provides an example of the RSA encryption algorithm
 
 # First, determine all values for p,q,n,z,d,e
-# 1. Choose two large prime numbers  p & q
+# 1. Choose two prime numbers  p & q
 #       If numbers are too large there is more computation required
 #       If numbers are too small then the algorithm is less secure
 # 2. n=p*q, z=(p-1)(q-1)
@@ -71,13 +71,7 @@ def get_d(e, z):
 def encrypt_message(ascii_values, e, n):
     return [pow(value, e, n) for value in ascii_values]
 
-# def encrypt_message(ascii_values, e, n):
-#     # return (pow(ascii_values, e, n))
-#     ciphertext = [pow(value, e, n) for value in ascii_values]
-#     return ciphertext
-
 def decrypt_message(ciphertext, d, n):
-    # return pow(ciphertext, d, n)
     return [pow(value, d, n) for value in ciphertext]
 
 def is_all_letters(message):
@@ -92,46 +86,32 @@ def get_message():
             print("Message is too long")
         print("Message must contain only letters")
   
+def print_pqnzed(p, q, n, z, e, d):
+    print ("\np: ", p, "\nq: ", q, "\nn: ", n, "\nz: ", z)
+    print ("e: ", e, "\nd: ", d)
+
+def print_encrypted_details(message, ascii_values, cipher_text, decrypted_ascii_values, decrypted_message):
+    print ("\nMessage:             ", message)
+    print ("ASCII values:        ", ascii_values)
+    print ("Ciphertext:          ", cipher_text)
+    print ("Decrypted ASCII:     ", decrypted_ascii_values)
+    print ("Deciphered message:  ", decrypted_message)
 
 def main():
-    # Find values for p,q,n,z,e,d
     p, q= get_pq()
     n, z = get_nz(p,q)
     e = get_e(n, z)
     d = get_d(e, z)
-
-    # message = "hello"
-    # ascii_values = [ord(char) for char in message]
-    # ciphertext = encrypt_message(ascii_values, e, n)
-    # decrypted_text = decrypt_message(ciphertext, d, n)
     
-    # print ("\np: ", p, "\nq: ", q, "\nn: ", n, "\nz: ", z)
-    # print ("e: ", e, "\nd: ", d)
-    # print ("\nMessage:                 ", message)
-    # print ("ASCII Message:             ", ascii_values)
-    # print ("Ciphertext:                ", ciphertext)
-    # print ("Deciphered text:        ", decrypted_text)
-
-
     message = get_message()
-
     ascii_values = [ord(char) for char in message]
-    cipher_ascii_text = encrypt_message(ascii_values, e , n)
-    decrypted_ascii_text = decrypt_message(cipher_ascii_text, d, n)
-    decrypted_message = ''.join(chr(value) for value in decrypted_ascii_text)
+    cipher_text = encrypt_message(ascii_values, e , n)
+    decrypted_ascii_values = decrypt_message(cipher_text, d, n)
+    decrypted_message = ''.join(chr(value) for value in decrypted_ascii_values)
 
-    print ("\np: ", p, "\nq: ", q, "\nn: ", n, "\nz: ", z)
-    print ("e: ", e, "\nd: ", d)
-    print ("\nMessage:            ", message)
-    print ("ASCII values:       ", ascii_values)
-    print ("Ciphertext:         ", cipher_ascii_text)
-    print ("Decrypted text:     ", decrypted_ascii_text)
-    print ("Deciphered message: ", decrypted_message)
+    print_pqnzed(p, q, n, z, e, d)
+    print_encrypted_details(message, ascii_values, cipher_text, decrypted_ascii_values, decrypted_message)
 
 main()
 
 # Note chatgpt was used for get_d, mod_inverse, and extended_gcd funcitons.
-
-    
-
-
