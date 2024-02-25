@@ -68,11 +68,27 @@ def mod_inverse(e, z):
 def get_d(e, z):
     return mod_inverse(e, z)
 
+def modular_pow(base, exponent, modulus):
+    result = 1
+    base = base % modulus
+    while exponent > 0:
+        if exponent % 2 == 1:
+            result = (result * base) % modulus
+        exponent = exponent // 2
+        base = (base * base) % modulus
+    return result
+
 def encrypt_message(ascii_values, e, n):
     return [pow(value, e, n) for value in ascii_values]
 
+# def decrypt_message(ciphertext, d, n):
+#     return [pow(value, d, n) for value in ciphertext]
+
 def decrypt_message(ciphertext, d, n):
-    return [pow(value, d, n) for value in ciphertext]
+    blocks = [modular_pow(value, d, n) for value in ciphertext]
+    decrypted_ascii_values = [item for sublist in blocks for item in sublist]
+    return decrypted_ascii_values
+
 
 def get_message():
     while True:
@@ -89,27 +105,42 @@ def print_pqnzed(p, q, n, z, e, d):
     print ("e: ", e, "\nd: ", d)
 
 def print_encrypted_details(message, ascii_values, cipher_text, decrypted_ascii_values, decrypted_message):
-    print ("\nMessage:             ", message)
-    print ("ASCII values:        ", ascii_values)
-    print ("Ciphertext:          ", cipher_text)
-    print ("Decrypted ASCII:     ", decrypted_ascii_values)
-    print ("Deciphered message:  ", decrypted_message)
+    print("\nMessage:             ", message)
+    print("ASCII values:        ", ascii_values)
+    
+    print("\nCiphertext Blocks:")
+    for block in cipher_text:
+        print("   ", block)
+
+    print("\nDecrypted ASCII Blocks:")
+    for block in decrypted_ascii_values:
+        print("   ", block)
+    
+    decrypted_message = ''.join(chr(item) for block in decrypted_ascii_values for item in block)
+    print("\nDeciphered message:  ", decrypted_message)
+
+
 
 def main():
-    p, q= get_pq()
-    n, z = get_nz(p,q)
+    p, q = get_pq()
+    n, z = get_nz(p, q)
     e = get_e(n, z)
     d = get_d(e, z)
-    
+
     message = get_message()
     ascii_values = [ord(char) for char in message]
-    cipher_text = encrypt_message(ascii_values, e , n)
+    block_size = 2  # Adjust this based on your needs
+    blocks = [ascii_values[i:i + block_size] for i in range(0, len(ascii_values), block_size)]
+    
+    cipher_text = encrypt_message(message, e, n)
     decrypted_ascii_values = decrypt_message(cipher_text, d, n)
-    decrypted_message = ''.join(chr(value) for value in decrypted_ascii_values)
-
+    
     print_pqnzed(p, q, n, z, e, d)
-    print_encrypted_details(message, ascii_values, cipher_text, decrypted_ascii_values, decrypted_message)
+    print_encrypted_details(message, blocks, cipher_text, decrypted_ascii_values)
 
 main()
 
-# Note chatgpt was used for get_d, mod_inverse, and extended_gcd funcitons.
+
+main()
+
+# Note chatgpt was used for modular_pow, get_d, mod_inverse, and extended_gcd funcitons.
