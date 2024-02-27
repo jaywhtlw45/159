@@ -68,21 +68,23 @@ def mod_inverse(e, z):
 def get_d(e, z):
     return mod_inverse(e, z)
 
-def modular_pow(base, exponent, modulus):
+# efficient exponential modulus operation, result = (base ^ exponent) % modulus
+def modular_power(base, exp, mod):
     result = 1
-    base = base % modulus
-    while exponent > 0:
-        if exponent % 2 == 1:
-            result = (result * base) % modulus
-        exponent = exponent // 2
-        base = (base * base) % modulus
+    while exp > 0:
+        result = result * base
+        exp -= 1
+        if (result > mod):
+            result = result % mod
     return result
 
 def encrypt_message(ascii_values, e, n):
-    return [pow(value, e, n) for value in ascii_values]
+    #return [pow(value, e, n) for value in ascii_values]
+    return [modular_power(value, e, n) for value in ascii_values]
 
 def decrypt_message(ciphertext, d, n):
-    return [pow(value, d, n) for value in ciphertext]
+    #return [pow(value, d, n) for value in ciphertext]
+    return [modular_power(value,d,n) for value in ciphertext]
 
 def get_message():
     while True:
@@ -122,4 +124,4 @@ def main():
 
 main()
 
-# Note chatgpt was used for modular_pow, get_d, mod_inverse, and extended_gcd funcitons.
+# Note chatgpt was used for get_d, mod_inverse, and extended_gcd funcitons.
