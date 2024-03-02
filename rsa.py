@@ -24,15 +24,13 @@ def is_prime(num):
     return True
 
 def get_pq():
-    print("Both p and q must be prime, and p*q must be greater than 122")
+    print("Both p and q must be prime, and p*q must be greater than 122, p cannot equal q")
     while True:
         p = int(input("Enter a prime value for p: "))
         q = int(input("Enter a prime value for q: "))
-
-        if is_prime(p) and is_prime(q) and (p * q) > 122:
+        if is_prime(p) and is_prime(q) and (p * q) > 122 and p != q:
             return p, q
-        else:
-            print("Both p and q must be prime, and p*q must be greater than 122")
+        print("Both p and q must be prime, p cannot equal q, and p*q must be greater than 122\n")
 
 def get_nz(p, q):
     return p*q, (p-1)*(q-1)    
@@ -68,23 +66,11 @@ def mod_inverse(e, z):
 def get_d(e, z):
     return mod_inverse(e, z)
 
-# efficient exponential modulus operation, result = (base ^ exponent) % modulus
-def modular_power(base, exp, mod):
-    result = 1
-    while exp > 0:
-        result = result * base
-        exp -= 1
-        if (result > mod):
-            result = result % mod
-    return result
-
 def encrypt_message(ascii_values, e, n):
-    #return [pow(value, e, n) for value in ascii_values]
-    return [modular_power(value, e, n) for value in ascii_values]
+    return [pow(value, e, n) for value in ascii_values]
 
 def decrypt_message(ciphertext, d, n):
-    #return [pow(value, d, n) for value in ciphertext]
-    return [modular_power(value,d,n) for value in ciphertext]
+    return [pow(value, d, n) for value in ciphertext]
 
 def get_message():
     while True:
