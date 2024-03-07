@@ -41,7 +41,7 @@ def get_user_data():
         lines = file.readlines()
     return [line.strip().split(':') for line in lines]
 
-# User chooses to login or 
+# User chooses to login or quit program
 def user_login():
     user_data = get_user_data()
     if len(user_data) < 1:
@@ -127,10 +127,11 @@ def user_action(user, level):
         if user_input == 2:
             display_writable_files(level)
         if user_input == 3:
+            print("Logging out...")
             break
         
 def main():
-    print("\nNOTE: This program follows the Bell-La_Paluda model")
+    print("\nNOTE: This program follows the Bell-La-Paluda model")
 
     create_user_file()
     generate_file_permissions()
